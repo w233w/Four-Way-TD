@@ -1,5 +1,4 @@
 import pygame
-from typing import Type
 
 from const import *
 from groups import grids

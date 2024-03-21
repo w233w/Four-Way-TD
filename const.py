@@ -38,6 +38,7 @@ Blue = 0, 0, 255
 Green = 0, 255, 0
 Yellow = 255, 255, 0
 Golden = 255, 215, 0
+Gray = 192, 192, 192
 
 
 @dataclass

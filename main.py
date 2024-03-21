@@ -1,6 +1,5 @@
 import pygame
 import random
-from typing import Self, Type
 
 # 三方向塔防，左上角是建造菜单，右上角游戏内信息，左下角塔信息，右下角游戏菜单。
 # 塔该不该有方向还有待研究，地图四角要不要去除也有待研究（防止四角上的塔压力过大）。
@@ -17,6 +16,7 @@ class Info(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
         self.font = pygame.font.SysFont("timesnewroman", 16)
+        _, self.text_height = self.font.size("test")
         self.size = (WIN_SIZE - GRIDS_SIZE) / 2, (WIN_SIZE - GRIDS_SIZE) / 2
         self.image = pygame.Surface(self.size)
         self.image.set_colorkey(Black)
@@ -24,12 +24,11 @@ class Info(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=self.pos)
 
     def update(self) -> None:
-        self.image.fill([192, 192, 192])
-        _, text_height = self.font.size("test")
+        self.image.fill(Gray)
         for i, (key, val) in enumerate(to_dict(resource).items()):
             text = f"{key.capitalize()}: {val}"
             text_surface = self.font.render(text, True, AlmostBlack, None)
-            self.image.blit(text_surface, [10, 10 + i * (10 + text_height)])
+            self.image.blit(text_surface, [10, 10 + i * (10 + self.text_height)])
 
 
 # Init pygame & Crate screen
@@ -56,6 +55,7 @@ while running := True:
     event_list = pygame.event.get()
     for event in event_list:
         if event.type == pygame.QUIT:
+            running = False
             pygame.quit()
             exit()
     # 生成敌人
