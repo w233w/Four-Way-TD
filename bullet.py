@@ -3,6 +3,13 @@ from const import *
 
 
 class TestBullet(pygame.sprite.Sprite):
+    """
+    测试子弹
+    pos: 初始位置
+    speed: 初始速度元向量
+    speed: 实际速度倍率
+    """
+
     def __init__(
         self, pos: pygame.Vector2, speed: pygame.Vector2, speed_modifier: float
     ) -> None:

@@ -6,6 +6,12 @@ from bullet import *
 
 
 class BaseTower(pygame.sprite.Sprite):
+    """
+    塔的基类
+    pos: 初始位置
+    price: 初始售价
+    """
+
     def __init__(
         self, pos: pygame.Vector2, price: int, *group: pygame.sprite.Group
     ) -> None:

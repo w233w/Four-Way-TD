@@ -5,6 +5,12 @@ from util import *
 
 
 class BaseEnemy(pygame.sprite.Sprite):
+    """
+    敌人基类
+    road: 出现在第几路
+    side: 出现在哪一侧
+    """
+
     def __init__(self, road: int, side: Direction) -> None:
         super().__init__()
         if road not in range(EDGES):
