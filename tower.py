@@ -82,6 +82,9 @@ class TestTower(BaseTower):
     def mergeable(self, tower: BaseTower) -> bool:
         return False
 
+    def merge(self, tower: BaseTower) -> None:
+        raise RuntimeError("Can't be called here")
+
     def update(self, event_list: list[pygame.event.Event]):
         super().update(event_list, self.__class__)
         if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
@@ -110,6 +113,7 @@ class TestTower2(BaseTower):
 
     def merge(self, tower: BaseTower) -> None:
         self.tier += 1
+        self.draw_triangle()
         tower.kill()
 
     def draw_triangle(self) -> None:
@@ -148,10 +152,10 @@ class TestTower2(BaseTower):
             for event in event_list:
                 if event.type == pygame.MOUSEBUTTONDOWN and self.hoving:
                     self.side += 1
+                    self.draw_triangle()
             if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
                 for triangle in self.triangles:
                     player_bullets.add(
                         TestBullet(self.pos, (self.side + triangle).to_vector(), 8)
                     )
                 self.last_shot = pygame.time.get_ticks()
-            self.draw_triangle()
