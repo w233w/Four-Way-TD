@@ -43,7 +43,7 @@ Gray = 192, 192, 192
 
 @dataclass
 class Resource:
-    gold: int = 20
+    gold: int = 200
     crystal: int = 0
 
 

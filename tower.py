@@ -4,6 +4,8 @@ from typing import Type
 from groups import *
 from bullet import *
 
+from abc import abstractmethod
+
 
 class BaseTower(pygame.sprite.Sprite):
     """
@@ -25,6 +27,7 @@ class BaseTower(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.pos)
         self.placed = False
         self.draging = False
+        self.tier = 1
         self.init_time = pygame.time.get_ticks()
         self.last_shot = self.init_time
         self.add(*group)
@@ -32,6 +35,9 @@ class BaseTower(pygame.sprite.Sprite):
     @property
     def affordable(self) -> bool:
         return resource.gold >= self.sale_price
+
+    @abstractmethod
+    def mergeable(self, tower: Self) -> bool: ...
 
     def update(self, event_list: list[pygame.event.Event], cls: Type[Self]) -> None:
         mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
@@ -43,28 +49,9 @@ class BaseTower(pygame.sprite.Sprite):
                     self.draging = False
                     for grid in grids.sprites():
                         if grid.rect.collidepoint(mouse_pos) and grid.available(self):
+                            cls(self.init_pos, self.sale_price + 5, self.groups())
                             resource.gold -= self.sale_price
-                            if cls == TestTower:
-                                self.pos = grid.pos
-                                self.rect.center = self.pos
-                                self.placed = True
-                                grid.tower = self
-                                cls(self.init_pos, self.sale_price + 5, self.groups())
-                            elif cls == TestTower2:
-                                if grid.tower:
-                                    grid.tower.level += 1
-                                    self.pos = self.init_pos
-                                    self.rect.center = self.pos
-                                else:
-                                    self.pos = grid.pos
-                                    self.rect.center = self.pos
-                                    self.placed = True
-                                    grid.tower = self
-                                    cls(
-                                        self.init_pos,
-                                        self.sale_price + 5,
-                                        self.groups(),
-                                    )
+                            grid.place(self)
                             break
                     else:
                         self.pos = self.init_pos
@@ -89,14 +76,17 @@ class TestTower(BaseTower):
         )
         self.shot_interval = 800  # ms
 
+    def mergeable(self, tower: BaseTower) -> bool:
+        return False
+
     def update(self, event_list: list[pygame.event.Event]):
         super().update(event_list, self.__class__)
         if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
             if self.placed:
                 player_bullets.add(TestBullet(self.pos, Direction.UP.to_vector(), 8))
-                player_bullets.add(TestBullet(self.pos, pygame.Vector2(0, 1), 8))
-                player_bullets.add(TestBullet(self.pos, pygame.Vector2(-1, 0), 8))
-                player_bullets.add(TestBullet(self.pos, pygame.Vector2(1, 0), 8))
+                player_bullets.add(TestBullet(self.pos, Direction.DOWN.to_vector(), 8))
+                player_bullets.add(TestBullet(self.pos, Direction.LEFT.to_vector(), 8))
+                player_bullets.add(TestBullet(self.pos, Direction.RIGHT.to_vector(), 8))
             self.last_shot = pygame.time.get_ticks()
 
 
@@ -108,14 +98,16 @@ class TestTower2(BaseTower):
     ) -> None:
         super().__init__(pos, price, *group)
         self.side = Direction.UP
-        self.level = 1
         self.shape_modifier = 0.8
         self.draw_triangle()
         self.shot_interval = 200
 
+    def mergeable(self, tower: BaseTower) -> bool:
+        return self.__class__ == tower.__class__ and self.tier < 4
+
     def draw_triangle(self) -> None:
         self.image.fill(Black)
-        self.triangles = TestTower2.tri[self.level]
+        self.triangles = TestTower2.tri[self.tier]
         self.radius = TOWER_GRID_SIZE // 2
         self.center = pygame.Vector2(self.radius)
         for triangle in self.triangles:

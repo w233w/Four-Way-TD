@@ -59,13 +59,16 @@ class Grid(pygame.sprite.Sprite):
 
     def available(self, tower: BaseTower):
         if self.tower:
-            if tower.__class__ != self.tower.__class__:
-                return False
-            if isinstance(self.tower, TestTower):
-                return False
-            elif isinstance(self.tower, TestTower2):
-                return self.tower.level <= 3
-            else:
-                return False
+            return self.tower.mergeable(tower)
         else:
             return True
+
+    def place(self, tower: BaseTower):
+        if self.tower:
+            self.tower.tier += 1
+            tower.kill()
+        else:
+            self.tower = tower
+            tower.pos = self.pos
+            tower.rect.center = self.pos
+            tower.placed = True
