@@ -89,10 +89,10 @@ class TestTower(BaseTower):
         super().update(event_list, self.__class__)
         if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
             if self.placed:
-                player_bullets.add(TestBullet(self.pos, Direction.UP.to_vector(), 8))
-                player_bullets.add(TestBullet(self.pos, Direction.DOWN.to_vector(), 8))
-                player_bullets.add(TestBullet(self.pos, Direction.LEFT.to_vector(), 8))
-                player_bullets.add(TestBullet(self.pos, Direction.RIGHT.to_vector(), 8))
+                player_bullets.add(TestBullet(self.pos, Direction.UP, 8))
+                player_bullets.add(TestBullet(self.pos, Direction.DOWN, 8))
+                player_bullets.add(TestBullet(self.pos, Direction.LEFT, 8))
+                player_bullets.add(TestBullet(self.pos, Direction.RIGHT, 8))
             self.last_shot = pygame.time.get_ticks()
 
 
@@ -155,7 +155,5 @@ class TestTower2(BaseTower):
                     self.draw_triangle()
             if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
                 for triangle in self.triangles:
-                    player_bullets.add(
-                        TestBullet(self.pos, (self.side + triangle).to_vector(), 8)
-                    )
+                    player_bullets.add(TestBullet(self.pos, self.side + triangle, 8))
                 self.last_shot = pygame.time.get_ticks()

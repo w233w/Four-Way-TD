@@ -4,21 +4,21 @@ from const import *
 
 class TestBullet(pygame.sprite.Sprite):
     """
-    测试子弹
+    测试子弹-minigun子弹
     pos: 初始位置
     speed: 初始速度元向量
     speed: 实际速度倍率
     """
 
     def __init__(
-        self, pos: pygame.Vector2, speed: pygame.Vector2, speed_modifier: float
+        self, pos: pygame.Vector2, direction: Direction, speed_modifier: float
     ) -> None:
         super().__init__()
         self.radius = 1.5
         self.image = pygame.Surface([2 * self.radius, 2 * self.radius])
         self.image.set_colorkey(Black)
         self.pos = pygame.Vector2(pos)
-        self.speed = speed
+        self.speed = direction.to_vector()
         self.speed_modifier = speed_modifier
         self.shift = self.speed.rotate(90).normalize() * random.uniform(
             -2 * self.radius, 2 * self.radius

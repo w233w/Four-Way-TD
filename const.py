@@ -55,18 +55,18 @@ resource = Resource()
 
 
 class Direction(Enum):
+    LEFT = -1
     UP = 0
     RIGHT = 1
     DOWN = 2
-    LEFT = 3
 
-    def __add__(self, other: int):
-        return Direction((self.value + other) % 4)
+    def __add__(self, other: int) -> Self:
+        return Direction((self.value + other + 1) % 4 - 1)
 
-    def __sub__(self, other: int):
-        return Direction((self.value - other) % 4)
+    def __sub__(self, other: int) -> Self:
+        return Direction((self.value - other + 1) % 4 - 1)
 
-    def to_vector(self):
+    def to_vector(self) -> pygame.Vector2:
         if self == Direction.UP:
             return pygame.Vector2(0, -1)
         elif self == Direction.RIGHT:
@@ -75,10 +75,12 @@ class Direction(Enum):
             return pygame.Vector2(0, 1)
         elif self == Direction.LEFT:
             return pygame.Vector2(-1, 0)
+        else:
+            raise ValueError("Impossible direction")
 
     @classmethod
     def random(cls) -> Self:
-        return Direction(random.randint(0, 3))
+        return Direction(random.randint(-1, 2))
 
     @classmethod
     def all(cls) -> list[Self]:
