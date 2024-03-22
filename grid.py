@@ -65,8 +65,7 @@ class Grid(pygame.sprite.Sprite):
 
     def place(self, tower: BaseTower):
         if self.tower:
-            self.tower.tier += 1
-            tower.kill()
+            self.tower.merge(tower)
         else:
             self.tower = tower
             tower.pos = self.pos

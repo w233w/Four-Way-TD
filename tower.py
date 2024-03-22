@@ -39,6 +39,9 @@ class BaseTower(pygame.sprite.Sprite):
     @abstractmethod
     def mergeable(self, tower: Self) -> bool: ...
 
+    @abstractmethod
+    def merge(self, tower: Self) -> None: ...
+
     def update(self, event_list: list[pygame.event.Event], cls: Type[Self]) -> None:
         mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
         if not self.placed and self.affordable:
@@ -104,6 +107,10 @@ class TestTower2(BaseTower):
 
     def mergeable(self, tower: BaseTower) -> bool:
         return self.__class__ == tower.__class__ and self.tier < 4
+
+    def merge(self, tower: BaseTower) -> None:
+        self.tier += 1
+        tower.kill()
 
     def draw_triangle(self) -> None:
         self.image.fill(Black)
