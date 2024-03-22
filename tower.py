@@ -106,7 +106,7 @@ class TestTower2(BaseTower):
         self.side = Direction.UP
         self.shape_modifier = 0.8
         self.draw_triangle()
-        self.shot_interval = 200
+        self.shot_interval = 1000
 
     def mergeable(self, tower: BaseTower) -> bool:
         return self.__class__ == tower.__class__ and self.tier < 4
@@ -155,5 +155,5 @@ class TestTower2(BaseTower):
                     self.draw_triangle()
             if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
                 for triangle in self.triangles:
-                    player_bullets.add(TestBullet(self.pos, self.side + triangle, 8))
+                    player_bullets.add(TestBullet2(self.pos, self.side + triangle))
                 self.last_shot = pygame.time.get_ticks()
