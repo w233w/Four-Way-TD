@@ -1,19 +1,15 @@
-import pygame
-
-from const import *
-from groups import grids
 from tower import *
 
 
 class Grids(pygame.sprite.Sprite):
     def __init__(self, size: int, edges: int) -> None:
         super().__init__()
-        self.image = pygame.Surface(VSIZE)
+        self.image = pygame.Surface(V_SIZE)
         self.image.set_colorkey(Black)
         self.size = pygame.Vector2(size)
         self.interval = pygame.Vector2(GRIDS_INTERVAL)
-        self.top_left_pos = (VSIZE - pygame.Vector2(size)) / 2
-        self.rect = self.image.get_rect(center=pygame.Vector2(VSIZE) / 2)
+        self.top_left_pos = (V_SIZE - pygame.Vector2(size)) / 2
+        self.rect = self.image.get_rect(center=pygame.Vector2(V_SIZE) / 2)
         for e in range(0, edges + 1):
             pygame.draw.line(
                 self.image,
@@ -31,7 +27,7 @@ class Grids(pygame.sprite.Sprite):
             )
         for i in range(edges**2):
             x, y = i // edges, i % edges
-            if not HAVE_CORNOR:
+            if not HAVE_CORNER:
                 if (x, y) in [
                     (0, 0),
                     (0, edges - 1),
@@ -59,7 +55,7 @@ class Grid(pygame.sprite.Sprite):
 
     def available(self, tower: BaseTower):
         if self.tower:
-            return self.tower.mergeable(tower)
+            return self.tower.can_merge(tower)
         else:
             return True
 

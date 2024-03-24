@@ -8,7 +8,7 @@ from util import *
 # 各类参数
 # 窗口大小
 WIN_SIZE = 600
-VSIZE = pygame.Vector2(WIN_SIZE)
+V_SIZE = pygame.Vector2(WIN_SIZE)
 GRIDS_SIZE = 200
 EDGES = 5
 if GRIDS_SIZE % EDGES != 0:
@@ -19,7 +19,7 @@ if not is_integer_value(GRIDS_INTERVAL):
 ROAD_LENGTH = (WIN_SIZE - GRIDS_SIZE) / 2
 if not is_integer_value(ROAD_LENGTH):
     raise ValueError()
-HAVE_CORNOR = False
+HAVE_CORNER = False
 TOWER_GRID_SIZE = GRIDS_INTERVAL
 ENEMY_SIZE = GRIDS_INTERVAL
 

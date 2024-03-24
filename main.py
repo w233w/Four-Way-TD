@@ -1,8 +1,3 @@
-import pygame
-import random
-
-from const import *
-from groups import *
 from grid import *
 from tower import *
 from enemy import *
@@ -29,7 +24,7 @@ class Info(pygame.sprite.Sprite):
 
 # Init pygame & Crate screen
 pygame.init()
-screen = pygame.display.set_mode(VSIZE)
+screen = pygame.display.set_mode(V_SIZE)
 pygame.display.set_caption("测试")
 clock = pygame.time.Clock()
 

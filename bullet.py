@@ -1,5 +1,5 @@
-import pygame
 from const import *
+from scipy.stats import norm
 
 
 class TestBullet(pygame.sprite.Sprite):
@@ -80,17 +80,33 @@ class TestBullet2(pygame.sprite.Sprite):
             )
         else:
             raise ValueError()
-        print(self.rect, self.rect.move(self.rect.topleft))
-        pygame.draw.ellipse(
-            self.image,
-            Red,
-            self.rect.move(-pygame.Vector2(self.rect.topleft)),
-        )
         self.mask = pygame.mask.Mask(self.size)
+        self.laser_lasting = 1000
 
         self.init_time = pygame.time.get_ticks()
         self.dpf = 2 / FPS
 
     def update(self) -> None:
-        if pygame.time.get_ticks() - self.init_time > 500:
+        self.image.fill(Black)
+        current = pygame.time.get_ticks() - self.init_time
+        x = current % self.laser_lasting / (self.laser_lasting // 10) - 5
+        y = norm.pdf(x, 0, 1)
+        size_delta = 2 * y
+        if self.direction in [Direction.UP, Direction.DOWN]:
+            rect_x, rect_y, rect_w, rect_h = (self.width - self.width * size_delta) // 2, 0, int(self.width * size_delta), 600
+            pygame.draw.ellipse(
+                self.image,
+                Red,
+                pygame.rect.Rect(rect_x, rect_y, rect_w, rect_h)
+            )
+        elif self.direction in [Direction.LEFT, Direction.RIGHT]:
+            rect_x, rect_y, rect_w, rect_h = 0, (self.width - self.width * size_delta) // 2, 600, int(self.width * size_delta)
+            pygame.draw.ellipse(
+                self.image,
+                Red,
+                pygame.rect.Rect(rect_x, rect_y, rect_w, rect_h)
+            )
+        else:
+            raise ValueError()
+        if pygame.time.get_ticks() - self.init_time > self.laser_lasting:
             self.kill()
