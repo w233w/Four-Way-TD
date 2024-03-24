@@ -83,7 +83,7 @@ class TestTower(BaseTower):
     def merge(self, tower: BaseTower) -> None:
         raise RuntimeError("Can't be called here")
 
-    def update(self, event_list: list[pygame.event.Event], cls):
+    def update(self, event_list: list[pygame.event.Event]):
         super().update(event_list, self.__class__)
         if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
             if self.placed:
@@ -144,7 +144,7 @@ class TestTower2(BaseTower):
                 [top, left_down, right_down],
             )
 
-    def update(self, event_list: list[pygame.event.Event], cls) -> None:
+    def update(self, event_list: list[pygame.event.Event]) -> None:
         super().update(event_list, self.__class__)
         if self.placed:
             for event in event_list:
