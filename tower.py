@@ -32,7 +32,7 @@ class BaseTower(pygame.sprite.Sprite):
 
     @property
     def affordable(self) -> bool:
-        return resource.gold >= self.sale_price
+        return RESOURCE.gold >= self.sale_price
 
     @abstractmethod
     def can_merge(self, tower: Self) -> bool: ...
@@ -51,7 +51,7 @@ class BaseTower(pygame.sprite.Sprite):
                     for g in grids.sprites():
                         if g.rect.collidepoint(mouse_pos) and g.available(self):
                             cls(self.init_pos, self.sale_price + 5, self.groups())
-                            resource.gold -= self.sale_price
+                            RESOURCE.gold -= self.sale_price
                             g.place(self)
                             break
                     else:

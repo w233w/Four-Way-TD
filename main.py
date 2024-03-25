@@ -16,7 +16,7 @@ class Info(pygame.sprite.Sprite):
 
     def update(self) -> None:
         self.image.fill(Gray)
-        for i, (key, val) in enumerate(to_dict(resource).items()):
+        for i, (key, val) in enumerate(to_dict(RESOURCE).items()):
             text = f"{key.capitalize()}: {val}"
             text_surface = self.font.render(text, True, AlmostBlack, None)
             self.image.blit(text_surface, [10, 10 + i * (10 + self.text_height)])

@@ -90,5 +90,5 @@ class TestEnemy(BaseEnemy):
                     "+10 gold",
                 )
             )
-            resource.gold += 10
+            RESOURCE.gold += 10
             self.kill()

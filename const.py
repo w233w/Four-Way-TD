@@ -51,7 +51,7 @@ def to_dict(res: Resource):
     return {field.name: getattr(res, field.name) for field in fields(res)}
 
 
-resource = Resource()
+RESOURCE = Resource()
 
 
 class Direction(Enum):
