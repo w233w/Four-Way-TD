@@ -40,7 +40,7 @@ class BaseTower(pygame.sprite.Sprite):
     @abstractmethod
     def merge(self, tower: Self) -> None: ...
 
-    def update(self, event_list: list[pygame.event.Event], cls: Type[Self]) -> None:
+    def update(self, event_list: list[pygame.event.Event]) -> None:
         mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
         if not self.placed and self.affordable:
             for event in event_list:
@@ -50,7 +50,9 @@ class BaseTower(pygame.sprite.Sprite):
                     self.dragging = False
                     for g in grids.sprites():
                         if g.rect.collidepoint(mouse_pos) and g.available(self):
-                            cls(self.init_pos, self.sale_price + 5, self.groups())
+                            self.__class__(
+                                self.init_pos, self.sale_price + 5, self.groups()
+                            )
                             RESOURCE.gold -= self.sale_price
                             g.place(self)
                             break
@@ -84,7 +86,7 @@ class TestTower(BaseTower):
         raise RuntimeError("Can't be called here")
 
     def update(self, event_list: list[pygame.event.Event]):
-        super().update(event_list, self.__class__)
+        super().update(event_list)
         if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
             if self.placed:
                 player_bullets.add(TestBullet(self.pos, Direction.UP, 8))
@@ -145,7 +147,7 @@ class TestTower2(BaseTower):
             )
 
     def update(self, event_list: list[pygame.event.Event]) -> None:
-        super().update(event_list, self.__class__)
+        super().update(event_list)
         if self.placed:
             for event in event_list:
                 if event.type == pygame.MOUSEBUTTONDOWN and self.hovering:
