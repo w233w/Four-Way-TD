@@ -52,11 +52,11 @@ class TestBullet2(pygame.sprite.Sprite):
         self.pos = pos
         self.direction = direction
         if self.direction in [Direction.UP, Direction.DOWN]:
-            self.width = TOWER_GRID_SIZE // 5
+            self.width = TOWER_GRID_SIZE
             self.height = WIN_SIZE
         elif self.direction in [Direction.LEFT, Direction.RIGHT]:
             self.width = WIN_SIZE
-            self.height = TOWER_GRID_SIZE // 5
+            self.height = TOWER_GRID_SIZE
         else:
             raise ValueError()
         self.size = [self.width, self.height]
@@ -81,7 +81,7 @@ class TestBullet2(pygame.sprite.Sprite):
         else:
             raise ValueError()
         self.mask = pygame.mask.Mask(self.size)
-        self.laser_lasting = 1000
+        self.laser_lasting = 1200
 
         self.init_time = pygame.time.get_ticks()
         self.dpf = 2 / FPS
@@ -91,20 +91,26 @@ class TestBullet2(pygame.sprite.Sprite):
         current = pygame.time.get_ticks() - self.init_time
         x = current % self.laser_lasting / (self.laser_lasting // 10) - 5
         y = norm.pdf(x, 0, 1)
-        size_delta = 2 * y
+        size_delta = 1.5 * y
         if self.direction in [Direction.UP, Direction.DOWN]:
-            rect_x, rect_y, rect_w, rect_h = (self.width - self.width * size_delta) // 2, 0, int(self.width * size_delta), 600
+            rect_x, rect_y, rect_w, rect_h = (
+                (self.width - self.width * size_delta) / 2 + 1,
+                0,
+                self.width * size_delta - 1,
+                WIN_SIZE,
+            )
             pygame.draw.ellipse(
-                self.image,
-                Red,
-                pygame.rect.Rect(rect_x, rect_y, rect_w, rect_h)
+                self.image, Red, pygame.rect.Rect(rect_x, rect_y, rect_w, rect_h)
             )
         elif self.direction in [Direction.LEFT, Direction.RIGHT]:
-            rect_x, rect_y, rect_w, rect_h = 0, (self.width - self.width * size_delta) // 2, 600, int(self.width * size_delta)
+            rect_x, rect_y, rect_w, rect_h = (
+                0,
+                (self.height - self.height * size_delta) / 2,
+                WIN_SIZE,
+                self.height * size_delta + 1,
+            )
             pygame.draw.ellipse(
-                self.image,
-                Red,
-                pygame.rect.Rect(rect_x, rect_y, rect_w, rect_h)
+                self.image, Red, pygame.rect.Rect(rect_x, rect_y, rect_w, rect_h)
             )
         else:
             raise ValueError()
