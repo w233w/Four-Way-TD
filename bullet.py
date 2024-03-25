@@ -114,5 +114,10 @@ class TestBullet2(pygame.sprite.Sprite):
             )
         else:
             raise ValueError()
+
+        if 0.2 < y < 1:
+            self.mask = pygame.mask.from_surface(self.image)
+        else:
+            self.mask = pygame.mask.Mask(self.size)
         if pygame.time.get_ticks() - self.init_time > self.laser_lasting:
             self.kill()
