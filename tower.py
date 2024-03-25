@@ -1,4 +1,8 @@
 from typing import Type
+
+from pygame import Vector2
+from pygame.event import Event
+from pygame.sprite import Group
 from groups import *
 from bullet import *
 
@@ -156,4 +160,20 @@ class TestTower2(BaseTower):
             if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
                 for triangle in self.triangles:
                     player_bullets.add(TestBullet2(self.pos, self.side + triangle))
+                self.last_shot = pygame.time.get_ticks()
+
+
+class TestTower3(BaseTower):
+    def __init__(self, pos: Vector2, price: int, *group: Group) -> None:
+        super().__init__(pos, price, *group)
+        pygame.draw.rect(
+            self.image, Blue, self.rect.move(-pygame.Vector2(self.rect.topleft))
+        )
+        self.shot_interval = 1900
+
+    def update(self, event_list: list[Event]) -> None:
+        super().update(event_list)
+        if self.placed:
+            if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
+                player_bullets.add(TestBullet3(self.pos, self.shape[0] * 4))
                 self.last_shot = pygame.time.get_ticks()

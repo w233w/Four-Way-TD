@@ -33,6 +33,7 @@ pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTO
 grid.add(Grids(GRIDS_SIZE, EDGES))
 tower_test.add(TestTower(pygame.Vector2(20, 20), 10))
 tower_test.add(TestTower2(pygame.Vector2(60, 60), 5))
+tower_test.add(TestTower3(pygame.Vector2(20, 90), 5))
 info_bar.add(Info())
 
 last_enemy = 3000

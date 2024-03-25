@@ -1,3 +1,4 @@
+from typing import Any
 from const import *
 from scipy.stats import norm
 
@@ -88,8 +89,8 @@ class TestBullet2(pygame.sprite.Sprite):
 
     def update(self) -> None:
         self.image.fill(Black)
-        current = pygame.time.get_ticks() - self.init_time
-        x = current % self.laser_lasting / (self.laser_lasting // 10) - 5
+        current_time = pygame.time.get_ticks() - self.init_time
+        x = current_time % self.laser_lasting / (self.laser_lasting // 10) - 5
         y = norm.pdf(x, 0, 1)
         size_delta = 1.5 * y
         if self.direction in [Direction.UP, Direction.DOWN]:
@@ -119,5 +120,32 @@ class TestBullet2(pygame.sprite.Sprite):
             self.mask = pygame.mask.from_surface(self.image)
         else:
             self.mask = pygame.mask.Mask(self.size)
-        if pygame.time.get_ticks() - self.init_time > self.laser_lasting:
+        if current_time > self.laser_lasting:
+            self.kill()
+
+
+class TestBullet3(pygame.sprite.Sprite):
+    def __init__(self, pos: pygame.Vector2, radius: float) -> None:
+        super().__init__()
+        self.pos = pos
+        self.radius = radius
+        self.image = pygame.Surface([2 * self.radius, 2 * self.radius])
+        self.image.set_colorkey(Black)
+        self.rect = self.image.get_rect(center=self.pos)
+        self.init_time = pygame.time.get_ticks()
+
+    def update(self) -> None:
+        self.image.fill(Black)
+        current_time = pygame.time.get_ticks() - self.init_time
+        r = self.radius * current_time / 800
+        print(round(12 * current_time / 800))
+        pygame.draw.circle(
+            self.image,
+            Blue,
+            [self.radius, self.radius],
+            r,
+            max(1, 12 - round(12 * current_time / 800)),
+        )
+        self.mask = pygame.mask.from_surface(self.image)
+        if current_time > 800:
             self.kill()
