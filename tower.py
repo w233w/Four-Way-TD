@@ -7,6 +7,7 @@ from groups import *
 from bullet import *
 
 from abc import abstractmethod
+import math
 
 
 class BaseTower(pygame.sprite.Sprite):
@@ -166,9 +167,15 @@ class TestTower2(BaseTower):
 class TestTower3(BaseTower):
     def __init__(self, pos: Vector2, price: int, *group: Group) -> None:
         super().__init__(pos, price, *group)
-        pygame.draw.rect(
-            self.image, Blue, self.rect.move(-pygame.Vector2(self.rect.topleft))
-        )
+        r = 0.8 * TOWER_GRID_SIZE // 2
+        center = self.shape // 2
+        points = []
+        for i in range(6):
+            point = center + pygame.Vector2(
+                r * math.sin(i * math.pi / 3), r * math.cos(i * math.pi / 3)
+            )
+            points.append(point)
+        pygame.draw.polygon(self.image, Blue, points)
         self.shot_interval = 1900
 
     def update(self, event_list: list[Event]) -> None:
