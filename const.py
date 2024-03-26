@@ -3,7 +3,17 @@ import random
 from enum import Enum
 from typing import Self
 from dataclasses import dataclass, fields
-from util import *
+
+
+def is_integer_value(var):
+    if isinstance(var, (int, float)):
+        if isinstance(var, float):
+            return var.is_integer()
+        else:
+            return True
+    else:
+        raise ValueError("Input must be of type int or float.")
+
 
 # 各类参数
 # 窗口大小
@@ -22,6 +32,7 @@ if not is_integer_value(ROAD_LENGTH):
 HAVE_CORNER = False
 TOWER_GRID_SIZE = GRIDS_INTERVAL
 ENEMY_SIZE = GRIDS_INTERVAL
+
 
 # 刷新率
 FPS = 60
@@ -111,3 +122,22 @@ class FloatText(pygame.sprite.Sprite):
             self.kill()
         self.pos -= pygame.Vector2(0, 1)
         self.rect.center = self.pos
+
+
+class Info(pygame.sprite.Sprite):
+    def __init__(self) -> None:
+        super().__init__()
+        self.font = pygame.font.SysFont("timesnewroman", 16)
+        _, self.text_height = self.font.size("test")
+        self.size = (WIN_SIZE - GRIDS_SIZE) / 2, (WIN_SIZE - GRIDS_SIZE) / 2
+        self.image = pygame.Surface(self.size)
+        self.image.set_colorkey(Black)
+        self.pos = pygame.Vector2(0, WIN_SIZE - ROAD_LENGTH)
+        self.rect = self.image.get_rect(topleft=self.pos)
+
+    def update(self) -> None:
+        self.image.fill(Gray)
+        for i, (key, val) in enumerate(to_dict(RESOURCE).items()):
+            text = f"{key.capitalize()}: {val}"
+            text_surface = self.font.render(text, True, AlmostBlack, None)
+            self.image.blit(text_surface, [10, 10 + i * (10 + self.text_height)])

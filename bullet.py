@@ -88,8 +88,10 @@ class TestBullet2(pygame.sprite.Sprite):
         self.dpf = 2 / FPS
 
     def update(self) -> None:
-        self.image.fill(Black)
         current_time = pygame.time.get_ticks() - self.init_time
+        if current_time > self.laser_lasting:
+            self.kill()
+        self.image.fill(Black)
         x = current_time % self.laser_lasting / (self.laser_lasting // 10) - 5
         y = norm.pdf(x, 0, 1)
         size_delta = 1.5 * y
@@ -120,8 +122,6 @@ class TestBullet2(pygame.sprite.Sprite):
             self.mask = pygame.mask.from_surface(self.image)
         else:
             self.mask = pygame.mask.Mask(self.size)
-        if current_time > self.laser_lasting:
-            self.kill()
 
 
 class TestBullet3(pygame.sprite.Sprite):
@@ -135,8 +135,10 @@ class TestBullet3(pygame.sprite.Sprite):
         self.init_time = pygame.time.get_ticks()
 
     def update(self) -> None:
-        self.image.fill(Black)
         current_time = pygame.time.get_ticks() - self.init_time
+        if current_time > 800:
+            self.kill()
+        self.image.fill(Black)
         r = self.radius * current_time / 800
         print(round(12 * current_time / 800))
         pygame.draw.circle(
@@ -147,5 +149,3 @@ class TestBullet3(pygame.sprite.Sprite):
             max(1, 12 - round(12 * current_time / 800)),
         )
         self.mask = pygame.mask.from_surface(self.image)
-        if current_time > 800:
-            self.kill()

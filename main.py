@@ -3,25 +3,6 @@ from tower import *
 from enemy import *
 
 
-class Info(pygame.sprite.Sprite):
-    def __init__(self) -> None:
-        super().__init__()
-        self.font = pygame.font.SysFont("timesnewroman", 16)
-        _, self.text_height = self.font.size("test")
-        self.size = (WIN_SIZE - GRIDS_SIZE) / 2, (WIN_SIZE - GRIDS_SIZE) / 2
-        self.image = pygame.Surface(self.size)
-        self.image.set_colorkey(Black)
-        self.pos = pygame.Vector2(0, WIN_SIZE - ROAD_LENGTH)
-        self.rect = self.image.get_rect(topleft=self.pos)
-
-    def update(self) -> None:
-        self.image.fill(Gray)
-        for i, (key, val) in enumerate(to_dict(RESOURCE).items()):
-            text = f"{key.capitalize()}: {val}"
-            text_surface = self.font.render(text, True, AlmostBlack, None)
-            self.image.blit(text_surface, [10, 10 + i * (10 + self.text_height)])
-
-
 # Init pygame & Crate screen
 pygame.init()
 screen = pygame.display.set_mode(V_SIZE)
