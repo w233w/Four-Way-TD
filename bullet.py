@@ -1,6 +1,7 @@
-from typing import Any
 from const import *
 from scipy.stats import norm
+from groups import *
+from enemy import *
 
 
 class TestBullet(pygame.sprite.Sprite):
@@ -41,6 +42,11 @@ class TestBullet(pygame.sprite.Sprite):
             or self.pos.y <= 0 - self.radius
         ):
             self.kill()
+        hit: list[BaseEnemy] = pygame.sprite.spritecollide(
+            self, enemy_test, False, pygame.sprite.collide_mask
+        )
+        for enemy in hit:
+            enemy.hp -= 1
 
 
 class TestBullet2(pygame.sprite.Sprite):
@@ -81,11 +87,10 @@ class TestBullet2(pygame.sprite.Sprite):
             )
         else:
             raise ValueError()
-        self.mask = pygame.mask.Mask(self.size)
         self.laser_lasting = 1200
 
         self.init_time = pygame.time.get_ticks()
-        self.dpf = 2 / FPS
+        self.dpf = 5 / FPS
 
     def update(self) -> None:
         current_time = pygame.time.get_ticks() - self.init_time
@@ -120,8 +125,11 @@ class TestBullet2(pygame.sprite.Sprite):
 
         if 0.2 < y < 1:
             self.mask = pygame.mask.from_surface(self.image)
-        else:
-            self.mask = pygame.mask.Mask(self.size)
+            hit: list[BaseEnemy] = pygame.sprite.spritecollide(
+                self, enemy_test, False, pygame.sprite.collide_mask
+            )
+            for enemy in hit:
+                enemy.hp -= self.dpf
 
 
 class TestBullet3(pygame.sprite.Sprite):
@@ -133,6 +141,7 @@ class TestBullet3(pygame.sprite.Sprite):
         self.image.set_colorkey(Black)
         self.rect = self.image.get_rect(center=self.pos)
         self.init_time = pygame.time.get_ticks()
+        self.hitted = []
 
     def update(self) -> None:
         current_time = pygame.time.get_ticks() - self.init_time
@@ -140,7 +149,6 @@ class TestBullet3(pygame.sprite.Sprite):
             self.kill()
         self.image.fill(Black)
         r = self.radius * current_time / 800
-        print(round(12 * current_time / 800))
         pygame.draw.circle(
             self.image,
             Blue,
@@ -149,3 +157,10 @@ class TestBullet3(pygame.sprite.Sprite):
             max(1, 12 - round(12 * current_time / 800)),
         )
         self.mask = pygame.mask.from_surface(self.image)
+        hit: list[BaseEnemy] = pygame.sprite.spritecollide(
+            self, enemy_test, False, pygame.sprite.collide_mask
+        )
+        for enemy in hit:
+            if enemy not in self.hitted:
+                enemy.hp -= 2
+        self.hitted.extend(hit)

@@ -76,11 +76,6 @@ class TestEnemy(BaseEnemy):
 
     def update(self) -> None:
         super().update()
-        hit = pygame.sprite.spritecollide(
-            self, player_bullets, True, pygame.sprite.collide_mask
-        )
-        if len(hit) >= 1:
-            self.hp -= 1
         if self.hp <= 0:
             texts.add(
                 FloatText(
