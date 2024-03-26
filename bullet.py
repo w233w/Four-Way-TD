@@ -42,6 +42,7 @@ class TestBullet(pygame.sprite.Sprite):
             or self.pos.y <= 0 - self.radius
         ):
             self.kill()
+            return
         hit: list[BaseEnemy] = pygame.sprite.spritecollide(
             self, enemy_test, False, pygame.sprite.collide_mask
         )
@@ -96,6 +97,7 @@ class TestBullet2(pygame.sprite.Sprite):
         current_time = pygame.time.get_ticks() - self.init_time
         if current_time > self.laser_lasting:
             self.kill()
+            return
         self.image.fill(Black)
         x = current_time % self.laser_lasting / (self.laser_lasting // 10) - 5
         y = norm.pdf(x, 0, 1)
@@ -133,9 +135,12 @@ class TestBullet2(pygame.sprite.Sprite):
 
 
 class TestBullet3(pygame.sprite.Sprite):
+    """
+    测试子弹三-震波
+    """
+
     def __init__(self, pos: pygame.Vector2, radius: float) -> None:
-        super().__init__()
-        self.pos = pos
+        super().__init__(pos)
         self.radius = radius
         self.image = pygame.Surface([2 * self.radius, 2 * self.radius])
         self.image.set_colorkey(Black)
@@ -147,6 +152,7 @@ class TestBullet3(pygame.sprite.Sprite):
         current_time = pygame.time.get_ticks() - self.init_time
         if current_time > 800:
             self.kill()
+            return
         self.image.fill(Black)
         r = self.radius * current_time / 800
         pygame.draw.circle(
@@ -164,3 +170,59 @@ class TestBullet3(pygame.sprite.Sprite):
             if enemy not in self.hitted:
                 enemy.hp -= 2
         self.hitted.extend(hit)
+
+
+class TestBullet4(pygame.sprite.Sprite):
+    """
+    测试子弹4-闪电链
+    """
+
+    def __init__(
+        self,
+        pos: pygame.Vector2,
+        target: BaseEnemy,
+        radius: float,
+        rest_bounce: int,
+        hit_hist: list[BaseEnemy],
+    ) -> None:
+        super().__init__()
+        if rest_bounce < 1:
+            self.kill()
+            return
+        self.rest_bounce = rest_bounce
+        self.hit_hist = hit_hist
+        self.pos = pos
+        self.target = target
+        self.target.hp -= 1
+        self.init_time = pygame.time.get_ticks()
+        self.next_target: BaseEnemy = None
+        self.image = pygame.Surface([WIN_SIZE, WIN_SIZE])
+        self.image.set_colorkey(Black)
+        self.rect = self.image.get_rect(center=V_SIZE // 2)
+        min_distance = radius
+        for enemy in enemy_test.sprites():
+            if enemy in self.hit_hist:
+                continue
+            distance = pygame.Vector2.distance_to(self.target.pos, enemy.pos)
+            if distance < min_distance:
+                min_distance = distance
+                self.next_target = enemy
+        if self.next_target is not None:
+            self.hit_hist.append(self.next_target)
+            player_bullets.add(
+                self.__class__(
+                    self.target.pos,
+                    self.next_target,
+                    radius,
+                    rest_bounce - 1,
+                    self.hit_hist,
+                )
+            )
+
+    def update(self):
+        current_time = pygame.time.get_ticks() - self.init_time
+        if current_time > 100:
+            self.kill()
+            return
+        self.image.fill(Black)
+        pygame.draw.line(self.image, Blue, self.pos, self.target.pos, 3)

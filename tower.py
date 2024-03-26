@@ -5,6 +5,7 @@ from pygame.event import Event
 from pygame.sprite import Group
 from groups import *
 from bullet import *
+from enemy import *
 
 from abc import abstractmethod
 import math
@@ -182,5 +183,34 @@ class TestTower3(BaseTower):
         super().update(event_list)
         if self.placed:
             if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
-                player_bullets.add(TestBullet3(self.pos, self.shape[0] * 4))
+                player_bullets.add(TestBullet3(self.pos, TOWER_GRID_SIZE * 4))
                 self.last_shot = pygame.time.get_ticks()
+
+
+class TestTower4(BaseTower):
+    def __init__(self, pos: Vector2, price: int, *group: Group) -> None:
+        super().__init__(pos, price, *group)
+        self.r = 4 * TOWER_GRID_SIZE
+        pygame.draw.circle(
+            self.image, AlmostBlack, self.shape // 2, TOWER_GRID_SIZE // 2
+        )
+        self.shot_interval = 500
+        self.target: BaseTower = None
+
+    def update(self, event_list: list[Event]) -> None:
+        super().update(event_list)
+        if self.placed:
+            if pygame.time.get_ticks() - self.last_shot > self.shot_interval:
+                min_distance = self.r
+                for enemy in enemy_test.sprites():
+                    distance = pygame.Vector2.distance_to(self.pos, enemy.pos)
+                    if distance < min_distance:
+                        min_distance = distance
+                        self.target = enemy
+                if self.target is not None:
+                    player_bullets.add(
+                        TestBullet4(self.pos, self.target, self.r, 5, [self.target])
+                    )
+                    self.target = None
+                    self.last_shot = pygame.time.get_ticks()
+                    return
