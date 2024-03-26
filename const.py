@@ -46,6 +46,7 @@ AlmostBlack = 1, 1, 1
 White = 255, 255, 255
 Red = 255, 0, 0
 Blue = 0, 0, 255
+Lightblue = 135, 206, 235
 Green = 0, 255, 0
 Yellow = 255, 255, 0
 Golden = 255, 215, 0

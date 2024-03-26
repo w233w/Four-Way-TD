@@ -208,8 +208,11 @@ class TestTower4(BaseTower):
                         min_distance = distance
                         self.target = enemy
                 if self.target is not None:
+                    end_shift = Direction.random().to_vector() * 3
                     player_bullets.add(
-                        TestBullet4(self.pos, self.target, self.r, 5, [self.target])
+                        TestBullet4(
+                            self.pos, self.target, self.r, 5, [self.target], end_shift
+                        )
                     )
                     self.target = None
                     self.last_shot = pygame.time.get_ticks()

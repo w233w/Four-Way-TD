@@ -184,15 +184,15 @@ class TestBullet4(pygame.sprite.Sprite):
         radius: float,
         rest_bounce: int,
         hit_hist: list[BaseEnemy],
+        start_shift: pygame.Vector2,
     ) -> None:
         super().__init__()
-        if rest_bounce < 1:
-            self.kill()
-            return
         self.rest_bounce = rest_bounce
         self.hit_hist = hit_hist
         self.pos = pos
         self.target = target
+        self.start_shift = start_shift
+        self.end_shift = Direction.random().to_vector() * 3
         self.target.hp -= 1
         self.init_time = pygame.time.get_ticks()
         self.next_target: BaseEnemy = None
@@ -207,7 +207,7 @@ class TestBullet4(pygame.sprite.Sprite):
             if distance < min_distance:
                 min_distance = distance
                 self.next_target = enemy
-        if self.next_target is not None:
+        if self.next_target is not None and self.rest_bounce > 1:
             self.hit_hist.append(self.next_target)
             player_bullets.add(
                 self.__class__(
@@ -216,13 +216,16 @@ class TestBullet4(pygame.sprite.Sprite):
                     radius,
                     rest_bounce - 1,
                     self.hit_hist,
+                    self.end_shift,
                 )
             )
 
     def update(self):
         current_time = pygame.time.get_ticks() - self.init_time
-        if current_time > 100:
+        if current_time > 150:
             self.kill()
             return
         self.image.fill(Black)
-        pygame.draw.line(self.image, Blue, self.pos, self.target.pos, 3)
+        start = self.pos + self.start_shift
+        end = self.target.pos + self.end_shift
+        pygame.draw.line(self.image, Lightblue, start, end, 3)
