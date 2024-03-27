@@ -9,7 +9,13 @@ class BaseEnemy(pygame.sprite.Sprite):
     side: 出现在哪一侧
     """
 
-    def __init__(self, road: int, side: Direction) -> None:
+    def __init__(
+        self,
+        road: int,
+        side: Direction,
+        speed_factor: float = 1,
+        power_factor: float = 1,
+    ) -> None:
         super().__init__()
         if road not in range(EDGES):
             raise ValueError()
@@ -40,7 +46,8 @@ class BaseEnemy(pygame.sprite.Sprite):
                 self.base_speed = Direction.LEFT.to_vector()
 
         self.pos = pygame.Vector2(x, y)
-        self.speed_modifier = 1
+        self.speed_modifier = speed_factor
+        self.power_factor = power_factor
         self.image = pygame.Surface([ENEMY_SIZE, ENEMY_SIZE])
         self.image.set_colorkey(Black)
         self.rect = self.image.get_rect(center=self.pos)
@@ -65,14 +72,19 @@ class BaseEnemy(pygame.sprite.Sprite):
 
 
 class TestEnemy(BaseEnemy):
-    def __init__(self, road: int, side: Direction) -> None:
-        super().__init__(road, side)
+    def __init__(
+        self,
+        road: int,
+        side: Direction,
+        speed_factor: float = 1,
+        power_factor: float = 1,
+    ) -> None:
+        super().__init__(road, side, speed_factor, power_factor)
         pygame.draw.circle(
             self.image, Red, (ENEMY_SIZE // 2, ENEMY_SIZE // 2), ENEMY_SIZE * 0.8 // 2
         )
         self.mask = pygame.mask.from_surface(self.image)
-        self.speed_modifier = 0.2
-        self.hp = 10
+        self.hp = 10 * self.power_factor
 
     def update(self) -> None:
         super().update()

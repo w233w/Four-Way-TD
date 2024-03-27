@@ -38,6 +38,7 @@ while running := True:
             TestEnemy(
                 random.randint(0, EDGES - 1),
                 Direction.random(),
+                0.2,
             )
         )
         last_enemy = pygame.time.get_ticks()
