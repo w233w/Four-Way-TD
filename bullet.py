@@ -101,7 +101,7 @@ class TestBullet2(pygame.sprite.Sprite):
         self.image.fill(Black)
         x = current_time % self.laser_lasting / (self.laser_lasting // 10) - 5
         y = norm.pdf(x, 0, 1)
-        size_delta = 1.5 * y
+        size_delta = 1.2 * y
         if self.direction in [Direction.UP, Direction.DOWN]:
             rect_x, rect_y, rect_w, rect_h = (
                 (self.width - self.width * size_delta) / 2 + 1,
@@ -110,7 +110,7 @@ class TestBullet2(pygame.sprite.Sprite):
                 WIN_SIZE,
             )
             pygame.draw.ellipse(
-                self.image, Red, pygame.rect.Rect(rect_x, rect_y, rect_w, rect_h)
+                self.image, Lightcyan, pygame.rect.Rect(rect_x, rect_y, rect_w, rect_h)
             )
         elif self.direction in [Direction.LEFT, Direction.RIGHT]:
             rect_x, rect_y, rect_w, rect_h = (
@@ -120,7 +120,7 @@ class TestBullet2(pygame.sprite.Sprite):
                 self.height * size_delta + 1,
             )
             pygame.draw.ellipse(
-                self.image, Red, pygame.rect.Rect(rect_x, rect_y, rect_w, rect_h)
+                self.image, Lightcyan, pygame.rect.Rect(rect_x, rect_y, rect_w, rect_h)
             )
         else:
             raise ValueError()
@@ -140,7 +140,8 @@ class TestBullet3(pygame.sprite.Sprite):
     """
 
     def __init__(self, pos: pygame.Vector2, radius: float) -> None:
-        super().__init__(pos)
+        super().__init__()
+        self.pos = pos
         self.radius = radius
         self.image = pygame.Surface([2 * self.radius, 2 * self.radius])
         self.image.set_colorkey(Black)
