@@ -46,8 +46,9 @@ class TestBullet(pygame.sprite.Sprite):
         hit: list[BaseEnemy] = pygame.sprite.spritecollide(
             self, enemy_test, False, pygame.sprite.collide_mask
         )
-        for enemy in hit:
-            enemy.hp -= 1
+        enemy_on_hit = hit[0]
+        enemy_on_hit.hp -= 1
+        self.kill()
 
 
 class TestBullet2(pygame.sprite.Sprite):
