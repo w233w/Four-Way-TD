@@ -56,7 +56,8 @@ Gray = 192, 192, 192
 
 @dataclass
 class Resource:
-    gold: int = 200
+    hp: int = 1000
+    gold: int = 20
     crystal: int = 0
 
 

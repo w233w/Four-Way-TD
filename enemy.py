@@ -57,15 +57,19 @@ class BaseEnemy(pygame.sprite.Sprite):
         match self.side:
             case Direction.UP:
                 if self.pos.y > self.y_limit:
+                    RESOURCE.hp -= 1
                     return
             case Direction.DOWN:
                 if self.pos.y < self.y_limit:
+                    RESOURCE.hp -= 1
                     return
             case Direction.LEFT:
                 if self.pos.x > self.x_limit:
+                    RESOURCE.hp -= 1
                     return
             case Direction.RIGHT:
                 if self.pos.x < self.x_limit:
+                    RESOURCE.hp -= 1
                     return
         self.pos += self.base_speed * self.speed_modifier
         self.rect.center = self.pos
