@@ -53,6 +53,8 @@ class BaseEnemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.pos)
         self.init_time = pygame.time.get_ticks()
 
+        self.buff = {}
+
     def update(self) -> None:
         match self.side:
             case Direction.UP:
@@ -71,7 +73,15 @@ class BaseEnemy(pygame.sprite.Sprite):
                 if self.pos.x < self.x_limit:
                     RESOURCE.hp -= 1
                     return
-        self.pos += self.base_speed * self.speed_modifier
+        if "cold" in self.buff:
+            if pygame.time.get_ticks() - self.buff["cold"] < 300:
+                cold_modifier = 0.5
+            else:
+                self.buff.pop("cold", 1)
+                cold_modifier = 1
+        else:
+            cold_modifier = 1
+        self.pos += self.base_speed * self.speed_modifier * cold_modifier
         self.rect.center = self.pos
 
 

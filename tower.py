@@ -19,12 +19,17 @@ class BaseTower(pygame.sprite.Sprite):
     """
 
     def __init__(
-        self, pos: pygame.Vector2, price: int, *group: pygame.sprite.Group
+        self,
+        pos: pygame.Vector2,
+        price: int,
+        add_price: int,
+        *group: pygame.sprite.Group
     ) -> None:
         super().__init__()
         self.init_pos = pygame.Vector2(pos)
         self.pos = self.init_pos
         self.sale_price = price
+        self.add_price = add_price
         self.shape = pygame.Vector2(TOWER_GRID_SIZE)
         self.image = pygame.Surface(self.shape)
         self.image.set_colorkey(Black)
@@ -57,7 +62,9 @@ class BaseTower(pygame.sprite.Sprite):
                     for g in grids.sprites():
                         if g.rect.collidepoint(mouse_pos) and g.available(self):
                             self.__class__(
-                                self.init_pos, self.sale_price + 5, self.groups()
+                                self.init_pos,
+                                self.sale_price + self.add_price,
+                                self.groups(),
                             )
                             RESOURCE.gold -= self.sale_price
                             g.place(self)
@@ -79,7 +86,7 @@ class TestTower(BaseTower):
     def __init__(
         self, pos: pygame.Vector2, price: int, *group: pygame.sprite.Group
     ) -> None:
-        super().__init__(pos, price, *group)
+        super().__init__(pos, price, 5, *group)
         pygame.draw.circle(
             self.image, Yellow, self.shape / 2, TOWER_GRID_SIZE * 0.8 // 2
         )
@@ -108,7 +115,7 @@ class TestTower2(BaseTower):
     def __init__(
         self, pos: pygame.Vector2, price: int, *group: pygame.sprite.Group
     ) -> None:
-        super().__init__(pos, price, *group)
+        super().__init__(pos, price, 2, *group)
         self.side = Direction.UP
         self.shape_modifier = 0.8
         self.draw_triangle()
@@ -167,7 +174,7 @@ class TestTower2(BaseTower):
 
 class TestTower3(BaseTower):
     def __init__(self, pos: Vector2, price: int, *group: Group) -> None:
-        super().__init__(pos, price, *group)
+        super().__init__(pos, price, 5, *group)
         r = 0.8 * TOWER_GRID_SIZE // 2
         center = self.shape // 2
         points = []
@@ -189,7 +196,7 @@ class TestTower3(BaseTower):
 
 class TestTower4(BaseTower):
     def __init__(self, pos: Vector2, price: int, *group: Group) -> None:
-        super().__init__(pos, price, *group)
+        super().__init__(pos, price, 5, *group)
         self.r = 4 * TOWER_GRID_SIZE
         pygame.draw.circle(
             self.image, AlmostBlack, self.shape // 2, TOWER_GRID_SIZE // 2

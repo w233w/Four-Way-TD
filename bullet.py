@@ -170,7 +170,8 @@ class TestBullet3(pygame.sprite.Sprite):
         )
         for enemy in hit:
             if enemy not in self.hitted:
-                enemy.hp -= 2
+                enemy.hp -= 0.5
+                enemy.buff["cold"] = pygame.time.get_ticks()
         self.hitted.extend(hit)
 
 

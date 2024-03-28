@@ -13,7 +13,7 @@ pygame.event.set_allowed([pygame.QUIT, pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTO
 
 grid.add(Grids(GRIDS_SIZE, EDGES))
 tower_test.add(TestTower(pygame.Vector2(20, 20), 10))
-tower_test.add(TestTower2(pygame.Vector2(60, 60), 10))
+tower_test.add(TestTower2(pygame.Vector2(60, 60), 5))
 tower_test.add(TestTower3(pygame.Vector2(20, 90), 10))
 tower_test.add(TestTower4(pygame.Vector2(90, 90), 10))
 info_bar.add(Info())
@@ -40,7 +40,7 @@ while running := True:
                 random.randint(0, EDGES - 1),
                 Direction.random(),
                 0.2,
-                1 * enemy_count / 20,
+                1 + enemy_count / 20,
             )
         )
         last_enemy = pygame.time.get_ticks()
