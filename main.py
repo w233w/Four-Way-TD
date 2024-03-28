@@ -20,7 +20,7 @@ info_bar.add(Info())
 
 last_enemy = 0
 interval = 1000
-
+enemy_count = 0
 # 主体
 while running := True:
     # 刷新率
@@ -34,11 +34,13 @@ while running := True:
             exit()
     # 生成敌人
     if pygame.time.get_ticks() - last_enemy >= interval:
+        enemy_count += 1
         enemy_test.add(
             TestEnemy(
                 random.randint(0, EDGES - 1),
                 Direction.random(),
                 0.2,
+                1 * enemy_count / 20,
             )
         )
         last_enemy = pygame.time.get_ticks()

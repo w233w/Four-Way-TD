@@ -29,7 +29,7 @@ if not is_integer_value(GRIDS_INTERVAL):
 ROAD_LENGTH = (WIN_SIZE - GRIDS_SIZE) / 2
 if not is_integer_value(ROAD_LENGTH):
     raise ValueError()
-HAVE_CORNER = False
+HAVE_CORNER = True
 TOWER_GRID_SIZE = GRIDS_INTERVAL
 ENEMY_SIZE = GRIDS_INTERVAL
 
