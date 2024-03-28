@@ -74,7 +74,7 @@ class BaseEnemy(pygame.sprite.Sprite):
                     RESOURCE.hp -= 1
                     return
         if "cold" in self.buff:
-            if pygame.time.get_ticks() - self.buff["cold"] < 300:
+            if pygame.time.get_ticks() - self.buff["cold"] < 500:
                 cold_modifier = 0.5
             else:
                 self.buff.pop("cold", 1)
@@ -96,6 +96,13 @@ class TestEnemy(BaseEnemy):
         super().__init__(road, side, speed_factor, power_factor)
         pygame.draw.circle(
             self.image, Red, (ENEMY_SIZE // 2, ENEMY_SIZE // 2), ENEMY_SIZE * 0.8 // 2
+        )
+        pygame.draw.circle(
+            self.image,
+            AlmostBlack,
+            (ENEMY_SIZE // 2, ENEMY_SIZE // 2),
+            ENEMY_SIZE * 0.8 // 2,
+            1,
         )
         self.mask = pygame.mask.from_surface(self.image)
         self.hp = 10 * self.power_factor
