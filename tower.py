@@ -204,6 +204,13 @@ class TestTower4(BaseTower):
         self.shot_interval = 500
         self.target: BaseTower = None
 
+    def can_merge(self, tower: BaseTower) -> bool:
+        return self.__class__ == tower.__class__ and self.tier < 4
+
+    def merge(self, tower: BaseTower) -> None:
+        self.tier += 1
+        tower.kill()
+
     def update(self, event_list: list[Event]) -> None:
         super().update(event_list)
         if self.placed:
@@ -218,7 +225,12 @@ class TestTower4(BaseTower):
                     end_shift = Direction.random().to_vector() * 3
                     player_bullets.add(
                         TestBullet4(
-                            self.pos, self.target, self.r, 5, [self.target], end_shift
+                            self.pos,
+                            self.target,
+                            self.r,
+                            self.tier + 1,
+                            [self.target],
+                            end_shift,
                         )
                     )
                     self.target = None

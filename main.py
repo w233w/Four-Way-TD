@@ -40,7 +40,7 @@ while running := True:
                 random.randint(0, EDGES - 1),
                 Direction.random(),
                 0.2,
-                1 + enemy_count / 20,
+                1 + min(5, enemy_count / 20),
             )
         )
         last_enemy = pygame.time.get_ticks()
