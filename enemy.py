@@ -106,7 +106,7 @@ class BaseEnemy(pygame.sprite.Sprite):
         self.rect.center = self.pos
 
 
-class TestEnemy(BaseEnemy):
+class TestEnemy1(BaseEnemy):
     """基础敌人，无特殊能力"""
 
     def __init__(
