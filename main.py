@@ -19,7 +19,7 @@ tower_test.add(TestTower4(pygame.Vector2(90, 90), 10))
 info_bar.add(Info())
 
 last_enemy = 0
-interval = 1000
+interval = 3000
 enemy_count = 0
 # 主体
 while running := True:
@@ -36,7 +36,7 @@ while running := True:
     if pygame.time.get_ticks() - last_enemy >= interval:
         enemy_count += 1
         enemy_test.add(
-            TestEnemy(
+            TestEnemy2(
                 random.randint(0, EDGES - 1),
                 Direction.random(),
                 0.2,

@@ -1,4 +1,5 @@
 from const import *
+from const import Direction
 from groups import *
 
 
@@ -55,6 +56,26 @@ class BaseEnemy(pygame.sprite.Sprite):
 
         self.buff = {}
 
+    def blink(
+        self, *, x: float = 0, y: float = 0, by_x: bool = False, by_y: bool = False
+    ):
+        if by_x:
+            self.pos.x = x
+        if by_y:
+            self.pos.y = y
+        self.rect.center = self.pos
+
+    def on_death(self, worth):
+        texts.add(
+            FloatText(
+                self.pos,
+                pygame.font.SysFont("timesnewroman", 12),
+                Golden,
+                f"+{worth} gold",
+            )
+        )
+        RESOURCE.gold += worth
+
     def update(self) -> None:
         match self.side:
             case Direction.UP:
@@ -86,6 +107,8 @@ class BaseEnemy(pygame.sprite.Sprite):
 
 
 class TestEnemy(BaseEnemy):
+    """基础敌人，无特殊能力"""
+
     def __init__(
         self,
         road: int,
@@ -106,17 +129,65 @@ class TestEnemy(BaseEnemy):
         )
         self.mask = pygame.mask.from_surface(self.image)
         self.hp = 10 * self.power_factor
+        self.worth = 10
 
     def update(self) -> None:
         super().update()
         if self.hp <= 0:
-            texts.add(
-                FloatText(
-                    self.pos,
-                    pygame.font.SysFont("timesnewroman", 12),
-                    Golden,
-                    "+10 gold",
-                )
-            )
-            RESOURCE.gold += 10
+            super().on_death(self.worth)
+            self.kill()
+
+
+class TestEnemy2(BaseEnemy):
+    """分裂型敌人，死后在附近两路生成1/4血的不可分裂的自身"""
+
+    def __init__(
+        self,
+        road: int,
+        side: Direction,
+        speed_factor: float = 1,
+        power_factor: float = 1,
+        /,
+        major: bool = True,
+    ) -> None:
+        super().__init__(road, side, speed_factor, power_factor)
+        self.is_major = major
+        shape_factor = 0.4 + major * 0.4
+        pygame.draw.circle(
+            self.image,
+            Cyan,
+            (ENEMY_SIZE // 2, ENEMY_SIZE // 2),
+            ENEMY_SIZE * shape_factor // 2,
+        )
+        pygame.draw.circle(
+            self.image,
+            AlmostBlack,
+            (ENEMY_SIZE // 2, ENEMY_SIZE // 2),
+            ENEMY_SIZE * shape_factor // 2,
+            1,
+        )
+        self.mask = pygame.mask.from_surface(self.image)
+        self.hp = 10 * self.power_factor * (1 if major else 0.25)
+        self.worth = 10 if major else 3
+
+    def update(self) -> None:
+        super().update()
+        if self.hp <= 0:
+            super().on_death(self.worth)
+            if self.is_major:
+                left, right = self.road + 1, self.road - 1
+                for road in [left, right]:
+                    if road in range(EDGES):
+                        splits = self.__class__(
+                            road,
+                            self.side,
+                            self.speed_modifier,
+                            self.power_factor,
+                            major=False,
+                        )
+                        if self.side in [Direction.UP, Direction.DOWN]:
+                            splits.blink(by_y=True, y=self.pos.y)
+                        else:
+                            splits.blink(by_x=True, x=self.pos.x)
+                        enemy_test.add(splits)
             self.kill()

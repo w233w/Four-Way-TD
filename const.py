@@ -47,6 +47,7 @@ White = 255, 255, 255
 Red = 255, 0, 0
 Darkred = 128, 0, 0
 Blue = 0, 0, 255
+Cyan = 0, 255, 255
 Lightblue = 135, 206, 235
 Lightcyan = 204, 255, 255
 Green = 0, 255, 0
