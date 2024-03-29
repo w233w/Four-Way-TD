@@ -23,7 +23,7 @@ class BaseTower(pygame.sprite.Sprite):
         pos: pygame.Vector2,
         price: int,
         add_price: int,
-        *group: pygame.sprite.Group
+        *group: pygame.sprite.Group,
     ) -> None:
         super().__init__()
         self.init_pos = pygame.Vector2(pos)
@@ -199,8 +199,12 @@ class TestTower4(BaseTower):
         super().__init__(pos, price, 5, *group)
         self.r = 4 * TOWER_GRID_SIZE
         pygame.draw.circle(
-            self.image, AlmostBlack, self.shape // 2, TOWER_GRID_SIZE // 2
+            self.image, AlmostBlack, self.shape // 2, TOWER_GRID_SIZE * 0.8 // 2
         )
+        self.font = pygame.font.SysFont("timesnewroman", 16)
+        text_size = self.font.size(f"{self.tier}")
+        text = self.font.render(f"{self.tier}", True, White, None)
+        self.image.blit(text, (self.shape // 2) - (pygame.Vector2(text_size) // 2))
         self.shot_interval = 500
         self.target: BaseTower = None
 
@@ -209,6 +213,13 @@ class TestTower4(BaseTower):
 
     def merge(self, tower: BaseTower) -> None:
         self.tier += 1
+        self.image.fill(Black)
+        pygame.draw.circle(
+            self.image, AlmostBlack, self.shape // 2, TOWER_GRID_SIZE * 0.8 // 2
+        )
+        text_size = self.font.size(f"{self.tier}")
+        text = self.font.render(f"{self.tier}", True, White, None)
+        self.image.blit(text, (self.shape // 2) - (pygame.Vector2(text_size) // 2))
         tower.kill()
 
     def update(self, event_list: list[Event]) -> None:
