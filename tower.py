@@ -178,6 +178,11 @@ class TestTower2(BaseTower):
                 for triangle in self.triangles:
                     player_bullets.add(TestBullet2(self.pos, self.side + triangle))
                 self.last_shot = pygame.time.get_ticks()
+        else:
+            for event in event_list:
+                if event.type == pygame.MOUSEBUTTONUP and self.hovering:
+                    self.side += 1
+                    self.draw_triangle()
 
 
 class TestTower3(BaseTower):

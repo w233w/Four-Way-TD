@@ -92,7 +92,7 @@ class TestBullet2(pygame.sprite.Sprite):
         self.laser_lasting = 1200
 
         self.init_time = pygame.time.get_ticks()
-        self.dpf = 5 / FPS
+        self.dpf = 10 / FPS
 
     def update(self) -> None:
         current_time = pygame.time.get_ticks() - self.init_time
