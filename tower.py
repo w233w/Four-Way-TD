@@ -67,6 +67,14 @@ class BaseTower(pygame.sprite.Sprite):
                                 self.groups(),
                             )
                             RESOURCE.gold -= self.sale_price
+                            texts.add(
+                                FloatText(
+                                    self.pos,
+                                    pygame.font.SysFont("timesnewroman", 12),
+                                    Darkred,
+                                    f"-{self.sale_price} gold",
+                                )
+                            )
                             g.place(self)
                             break
                     else:

@@ -52,16 +52,16 @@ while running := True:
     info_bar.update()
     grid.update()
     tower_test.update(event_list)
-    texts.update()
     enemy_test.update()
     player_bullets.update()
+    texts.update()
     # 不会有重叠，所以画不分先后
     grids.draw(screen)
     info_bar.draw(screen)
     grid.draw(screen)
     tower_test.draw(screen)
-    texts.draw(screen)
     enemy_test.draw(screen)
     player_bullets.draw(screen)
+    texts.draw(screen)
     # 更新画布
     pygame.display.flip()
